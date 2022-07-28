@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import express from "express";
 import { createUser, getUserByEmail } from "./helper.js";
 import jwt from "jsonwebtoken";
+import { auth } from "../middleware/auth.js";
 
 const router = express.Router();
 
@@ -34,7 +35,7 @@ router.post("/signup", async function (request, response) {
   }
 });
 
-router.post("/login", async function (request, response) {
+router.post("/login", auth, async function (request, response) {
   const { email, password } = request.body;
 
   const emailFromDB = await getUserByEmail(email);
