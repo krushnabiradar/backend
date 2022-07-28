@@ -12,7 +12,7 @@ async function genHashPassword(password) {
   return hashedPassword;
 }
 
-router.post("/signup", async function (request, response) {
+router.post("/users/signup", async function (request, response) {
   const { email, password } = request.body;
 
   const emailFromDB = await getUserByEmail(email);
@@ -34,7 +34,7 @@ router.post("/signup", async function (request, response) {
   }
 });
 
-router.post("/login", async function (request, response) {
+router.post("/users/login", async function (request, response) {
   const { email, password } = request.body;
 
   const emailFromDB = await getUserByEmail(email);
