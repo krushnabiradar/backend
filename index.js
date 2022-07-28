@@ -4,16 +4,14 @@ import express from "express";
 import { MongoClient } from "mongodb";
 import { usersRouter } from "./routes/users.js";
 
-
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT;
 
 // app.use -> Intercepts -> applies express.json() (Inbuilt Midd)
-app.use(cors())
-app.use(express.json())
-
+app.use(cors());
+app.use(express.json());
 
 const MONGO_URL = process.env.MONGO_URL;
 
@@ -30,7 +28,5 @@ app.get("/", function (request, response) {
 });
 
 app.use("/users", usersRouter);
-
-
 
 app.listen(PORT, () => console.log(`App started in ${PORT}`));
