@@ -35,7 +35,7 @@ router.post("/signup", async function (request, response) {
   }
 });
 
-router.post("/login", auth, async function (request, response) {
+router.post("/login",async function (request, response) {
   const { email, password } = request.body;
 
   const emailFromDB = await getUserByEmail(email);
@@ -51,9 +51,9 @@ router.post("/login", auth, async function (request, response) {
     // check is the password matches
 
     if (isPasswordMatch) {
-      const token = jwt.sign({ id: emailFromDB._id }, process.env.SECRET_KEY);
-
-      response.status(400).send({ msg: "Login sussesfully", token: token });
+      // const token = jwt.sign({ id: emailFromDB._id }, process.env.SECRET_KEY);
+      response.status(400).send({ msg: "Login sussesfully"});
+      // response.status(400).send({ msg: "Login sussesfully", token: token });
     } else {
       response.status(401).send({ msg: "Invalid credentials" });
     }
