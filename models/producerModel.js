@@ -14,7 +14,6 @@ const producerSchema = new mongoose.Schema(
     },
     DOB: {
       type: Date,
-      required: true,
     },
     bio: {
       type: String,

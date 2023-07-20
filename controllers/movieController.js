@@ -29,7 +29,7 @@ export const addMovie = async (req, res) => {
     const { name, yearOfRelease, producer, actors } = req.body;
     const movie = new Movie({ name, yearOfRelease, producer, actors });
     await movie.save();
-    res.json(movie);
+     res.status(201).json(movie);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal Server Error' });

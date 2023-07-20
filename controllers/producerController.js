@@ -26,8 +26,8 @@ export const getProducerById = async (req, res) => {
 
 export const addProducer = async (req, res) => {
   try {
-    const { name } = req.body;
-    const producer = new Producer({ name });
+    const { name,age,gender,bio } = req.body;
+    const producer = new Producer({ name,age,gender,bio });
     await producer.save();
     res.json(producer);
   } catch (err) {
