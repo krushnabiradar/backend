@@ -3,9 +3,9 @@ import cors from "cors";
 import "dotenv/config";
 import express from "express";
 import mongoose from "mongoose";
-import { actorRouter } from "./routes/actorRoute.js";
-import { movieRouter } from "./routes/movieRoute.js";
-import { producerRouter } from "./routes/producerRoute.js";
+import actorRoutes from './routes/api/actors.js';
+import movieRoutes from './routes/api/movies.js';
+import producerRoutes from './routes/api/producers.js';
 const app = express();
 
 app.use(express.json());
@@ -25,13 +25,11 @@ const connectToDB = async () => {
 };
 connectToDB();
 
-app.get("/", function (request, response) {
-  response.send("This is IMDB clone 🎉🎉🎉");
-});
 
-app.use('/movies', movieRouter);
-app.use('/actors',actorRouter);
-app.use('/producers', producerRouter);
+
+app.use('/api/movies', movieRoutes);
+app.use('/api/actors', actorRoutes);
+app.use('/api/producers', producerRoutes);
 
 
 app.listen(PORT, () => console.log(`Server Running in Port ${PORT}`));

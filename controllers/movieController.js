@@ -4,57 +4,65 @@ import Movie from '../models/movieModel.js';
 export const getMovies = async (req, res) => {
   try {
     const movies = await Movie.find().populate('producer actors').exec();
-    res.render('movie-list', { movies });
+    res.json(movies);
   } catch (err) {
     console.error(err);
-    res.status(500).send('Internal Server Error');
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
-export const getAddMovie = async (req, res) => {
+export const getMovieById = async (req, res) => {
   try {
-    const actors = await Actor.find();
-    const producers = await Producer.find();
-    res.render('movie-add', { actors, producers });
+    const movie = await Movie.findById(req.params.id).populate('producer actors').exec();
+    if (!movie) {
+      return res.status(404).json({ error: 'Movie not found' });
+    }
+    res.json(movie);
   } catch (err) {
     console.error(err);
-    res.status(500).send('Internal Server Error');
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
-export const postAddMovie = async (req, res) => {
+export const addMovie = async (req, res) => {
   try {
     const { name, yearOfRelease, producer, actors } = req.body;
     const movie = new Movie({ name, yearOfRelease, producer, actors });
     await movie.save();
-    req.flash('success_msg', 'Movie added successfully');
-    res.redirect('/movies');
+    res.json(movie);
   } catch (err) {
     console.error(err);
-    res.status(500).send('Internal Server Error');
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
-export const getEditMovie = async (req, res) => {
-  try {
-    const movie = await Movie.findById(req.params.id).populate('producer actors').exec();
-    const actors = await Actor.find();
-    const producers = await Producer.find();
-    res.render('movie-edit', { movie, actors, producers });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Internal Server Error');
-  }
-};
-
-export const postEditMovie = async (req, res) => {
+export const updateMovie = async (req, res) => {
   try {
     const { name, yearOfRelease, producer, actors } = req.body;
-    await Movie.findByIdAndUpdate(req.params.id, { name, yearOfRelease, producer, actors });
-    req.flash('success_msg', 'Movie updated successfully');
-    res.redirect('/movies');
+    const updatedMovie = await Movie.findByIdAndUpdate(
+      req.params.id,
+      { name, yearOfRelease, producer, actors },
+      { new: true }
+    ).populate('producer actors').exec();
+    if (!updatedMovie) {
+      return res.status(404).json({ error: 'Movie not found' });
+    }
+    res.json(updatedMovie);
   } catch (err) {
     console.error(err);
-    res.status(500).send('Internal Server Error');
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+export const deleteMovie = async (req, res) => {
+  try {
+    const deletedMovie = await Movie.findByIdAndDelete(req.params.id).exec();
+    if (!deletedMovie) {
+      return res.status(404).json({ error: 'Movie not found' });
+    }
+    res.json(deletedMovie);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };

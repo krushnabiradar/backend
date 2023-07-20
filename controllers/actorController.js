@@ -4,26 +4,65 @@ import Actor from '../models/actorModel.js';
 export const getActors = async (req, res) => {
   try {
     const actors = await Actor.find();
-    res.render('actor-list', { actors });
+    res.json(actors);
   } catch (err) {
     console.error(err);
-    res.status(500).send('Internal Server Error');
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
-export const getAddActor = (req, res) => {
-  res.render('actor-add');
+export const getActorById = async (req, res) => {
+  try {
+    const actor = await Actor.findById(req.params.id);
+    if (!actor) {
+      return res.status(404).json({ error: 'Actor not found' });
+    }
+    res.json(actor);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 };
 
-export const postAddActor = async (req, res) => {
+export const addActor = async (req, res) => {
   try {
     const { name } = req.body;
     const actor = new Actor({ name });
     await actor.save();
-    req.flash('success_msg', 'Actor added successfully');
-    res.redirect('/actors');
+    res.json(actor);
   } catch (err) {
     console.error(err);
-    res.status(500).send('Internal Server Error');
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+export const updateActor = async (req, res) => {
+  try {
+    const { name } = req.body;
+    const updatedActor = await Actor.findByIdAndUpdate(
+      req.params.id,
+      { name },
+      { new: true }
+    );
+    if (!updatedActor) {
+      return res.status(404).json({ error: 'Actor not found' });
+    }
+    res.json(updatedActor);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+export const deleteActor = async (req, res) => {
+  try {
+    const deletedActor = await Actor.findByIdAndDelete(req.params.id);
+    if (!deletedActor) {
+      return res.status(404).json({ error: 'Actor not found' });
+    }
+    res.json(deletedActor);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
